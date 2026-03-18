@@ -17,6 +17,7 @@ DATABASES = {
 }
 
 USE_TZ = False
+
 ROOT_URLCONF = "urls"
 
 INSTALLED_APPS = [
