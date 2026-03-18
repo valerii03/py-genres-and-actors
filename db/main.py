@@ -1,10 +1,11 @@
-from django.db.models import QuerySet
-
-from db.models import Actor, Genre
+from db.models import Genre, Actor
 
 
-def main() -> QuerySet:
+def main():
     genres = ["Western", "Action", "Dramma"]
+    for name in genres:
+        Genre.objects.get_or_create(name=name)
+
     actors = [
         ("George", "Klooney"),
         ("Kianu", "Reaves"),
@@ -14,20 +15,24 @@ def main() -> QuerySet:
         ("Scarlett", "Johansson"),
     ]
 
-    for genre_name in genres:
-        Genre.objects.get_or_create(name=genre_name)
-
     for first_name, last_name in actors:
-        Actor.objects.get_or_create(first_name=first_name, last_name=last_name)
+        Actor.objects.get_or_create(
+            first_name=first_name,
+            last_name=last_name
+        )
 
-    Genre.objects.filter(name="Dramma").update(name="Drama")
-    Actor.objects.filter(first_name="George", last_name="Klooney").update(
-        last_name="Clooney"
-    )
-    Actor.objects.filter(first_name="Kianu", last_name="Reaves").update(
-        first_name="Keanu",
-        last_name="Reeves",
-    )
+    genre = Genre.objects.get(name="Dramma")
+    genre.name = "Drama"
+    genre.save()
+
+    actor = Actor.objects.get(first_name="George", last_name="Klooney")
+    actor.last_name = "Clooney"
+    actor.save()
+
+    actor = Actor.objects.get(first_name="Kianu", last_name="Reaves")
+    actor.first_name = "Keanu"
+    actor.last_name = "Reeves"
+    actor.save()
 
     Genre.objects.filter(name="Action").delete()
     Actor.objects.filter(first_name="Scarlett").delete()
